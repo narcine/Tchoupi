@@ -142,7 +142,7 @@ void VideoPlayer::openFile()
 void VideoPlayer::setUrl(const QUrl &url)
 {
     static QString translationPath = QProcessEnvironment::systemEnvironment()
-            .value("TRANSLATION_PATH", "../translation");
+            .value("TRANSLATION_PATH", ".");
     _errorLabel->setText(QString());
     setWindowFilePath(url.isLocalFile() ? url.toLocalFile() : QString());
     int pos = url.toLocalFile().lastIndexOf(".");
