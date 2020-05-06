@@ -65,6 +65,9 @@ class QUrl;
 class QBoxLayout;
 QT_END_NAMESPACE
 
+/**
+ * @brief This class handles the player
+ */
 class VideoPlayer : public QWidget
 {
     Q_OBJECT
@@ -92,12 +95,42 @@ private:
     ReadSrt* _readSrt;
     ReadDic* _readWords;
 
-    QLabel* findTraduction(const ReadSrt::subId& id, const QString& sentence);
-    void clearLayout(QLayout *layout);
-    ReadSrt::subId findSubId(const qint64& position);
-    void setUrl(const QUrl &url);
-    SubLabel* createSubLabel(const QString& text, const QString& tooltip = "");
     bool event(QEvent* event) override;
+
+    /**
+     * @brief Find the appropriated translation
+     * @param id The subtitle number to retreive the translation
+     * @param sentence The sentence to check
+     * @return The desired translation
+     */
+    QLabel* findTranslation(const ReadSrt::subId& id, const QString& sentence);
+
+    /**
+     * @brief Clear the layout
+     * @param layout The layout to clear
+     */
+    void clearLayout(QLayout *layout);
+
+    /**
+     * @brief Find the subtitle number
+     * @param position The position to retrieve the number
+     * @return the subtitle number
+     */
+    ReadSrt::subId findSubId(const qint64& position);
+
+    /**
+     * @brief The url that will be chosen to open the video
+     * @param url The url to open
+     */
+    void setUrl(const QUrl &url);
+
+    /**
+     * @brief Create a new subtitle label
+     * @param text The text to display on the screen
+     * @param tooltip The tooltip text
+     * @return The new subtitle label
+     */
+    SubLabel* createSubLabel(const QString& text, const QString& tooltip = "");
 };
 
 #endif

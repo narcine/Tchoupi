@@ -1,12 +1,10 @@
 #include "readdic.h"
 
-#include <QDebug>
-
 ReadDic::ReadDic(QString filename)
 {
-    _fichier.setFileName(filename);
-    _fichier.open(QIODevice::ReadOnly | QIODevice::Text);
-    _flux.setDevice(&_fichier);
+    QFile file(filename);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    _flux.setDevice(&file);
     readText();
 }
 
@@ -17,61 +15,61 @@ const QMap<QString,QMap<QString,QString>>& ReadDic::getDictionary()
 
 void ReadDic::readText()
 {
-    QString ligne;
+    QString line;
     while(! _flux.atEnd())
     {
-        ligne = _flux.readLine();
-        QString words = getWords(ligne);
+        line = _flux.readLine();
+        QString words = getWords(line);
         if(!words.isEmpty())
         {
             addWords(words);
-            while(!isTheEnd(ligne))
+            while(!isTheEnd(line))
             {
-                ligne = _flux.readLine();
-                if(isNewWords(ligne))
+                line = _flux.readLine();
+                if(isNewWords(line))
                 {
                     break;
                 }
-                addTraduction(ligne, words);
+                addTranslation(line, words);
             }
         }
     }
 }
 
-bool ReadDic::isTheEnd(QString ligne)
+bool ReadDic::isTheEnd(const QString& line)
 {
-    return ligne.trimmed().isEmpty();
+    return line.trimmed().isEmpty();
 }
 
-bool ReadDic::isNewWords(QString ligne)
+bool ReadDic::isNewWords(const QString& line)
 {
-    return ligne.contains(":");
+    return line.contains(":");
 }
 
-QString ReadDic::getWords(QString ligne)
+QString ReadDic::getWords(const QString& line)
 {
     QString newWords {};
-    if(isNewWords(ligne))
+    if(isNewWords(line))
     {
-        QStringList list = ligne.split(":");
+        QStringList list = line.split(":");
         newWords = list[0].trimmed();
     }
     return newWords;
 }
 
-void ReadDic::addWords(QString word)
+void ReadDic::addWords(const QString& words)
 {
-    _mapDictionary.insert(word, QMap<QString, QString>());
+    _mapDictionary.insert(words, QMap<QString, QString>());
 }
 
-void ReadDic::addTraduction(QString traduction, QString words)
+void ReadDic::addTranslation(const QString& translation, const QString& words)
 {
-    if(traduction.isEmpty() || traduction.split(",").count() != 2)
+    if(translation.isEmpty() || translation.split(",").count() != 2)
         return;
 
     if(_mapDictionary.contains(words))
     {
-        QStringList list = traduction.split(",");
+        QStringList list = translation.split(",");
         QString numSubtitle = list[0].trimmed();
         QString traducForSub = list[1].trimmed();
 

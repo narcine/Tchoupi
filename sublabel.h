@@ -9,15 +9,17 @@
 #include <QMediaPlayer>
 #include <QMutex>
 
+/**
+ * @brief This class add a translation to a label
+ */
 class SubLabel : public QLabel
 {
      Q_OBJECT
 public:
-    SubLabel(QWidget *parent = nullptr);
-    SubLabel(const QString&);
+    SubLabel(const QString& text); /**< The text to display on the screen */
 
 signals :
-    void enter();
+    void enter(); /**< The signal is emitted when the event Qevent::Enter is received */
 
 protected:
     bool event(QEvent *event) override;

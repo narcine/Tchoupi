@@ -4,9 +4,9 @@
 
 ReadSrt::ReadSrt(QString filename)
 {
-    _fichier.setFileName(filename);
-    _fichier.open(QIODevice::ReadOnly | QIODevice::Text);
-    _flux.setDevice(&_fichier);
+    QFile file(filename);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    _flux.setDevice(&file);
     readText();
 }
 
@@ -27,25 +27,25 @@ const QMap<ReadSrt::subId, qint64>& ReadSrt::getSubPosition()
 
 void ReadSrt::readText()
 {
-    QString ligne;
+    QString line;
     while(!_flux.atEnd())
     {
-        ligne = _flux.readLine();
-        if(isNewSub(ligne))
+        line = _flux.readLine();
+        if(isNewSub(line))
         {
-            subId subId = getSubId(ligne);
-            ligne = _flux.readLine();
-            addDuration(ligne, subId);
+            subId subId = getSubId(line);
+            line = _flux.readLine();
+            addDuration(line, subId);
             addSub(subId);
-            while(!isTheEnd(ligne))
+            while(!isTheEnd(line))
             {
-                ligne = _flux.readLine();
-                purgeLine(ligne);
-                if(isNewSub(ligne))
+                line = _flux.readLine();
+                purgeLine(line);
+                if(isNewSub(line))
                 {
                     break;
                 }
-                addSubtitle(ligne, subId);
+                addSubtitle(line, subId);
             }
         }
     }
@@ -86,23 +86,23 @@ void ReadSrt::purgeLine(QString& line)
     line = line.trimmed();
 }
 
-bool ReadSrt::isTheEnd(const QString& ligne)
+bool ReadSrt::isTheEnd(const QString& line)
 {
-    return ligne.trimmed().isEmpty();
+    return line.trimmed().isEmpty();
 }
 
-bool ReadSrt::isNewSub(const QString& ligne)
+bool ReadSrt::isNewSub(const QString& line)
 {
     bool ok  = false;
-    ligne.toInt(&ok);
+    line.toInt(&ok);
     return ok;
 }
 
-ReadSrt::subId ReadSrt::getSubId(const QString& ligne)
+ReadSrt::subId ReadSrt::getSubId(const QString& line)
 {
     subId newSubId = 0;
-    if(isNewSub(ligne)){
-       newSubId = ligne.toLongLong();
+    if(isNewSub(line)){
+       newSubId = line.toLongLong();
     }
     return newSubId;
 }

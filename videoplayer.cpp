@@ -54,10 +54,6 @@
 #include <QVideoWidget>
 #include <QDebug>
 
-#include "readdic.h"
-#include "readsrt.h"
-#include "sublabel.h"
-
 VideoPlayer::VideoPlayer(QWidget *parent)
     : QWidget(parent)
 {
@@ -147,8 +143,6 @@ void VideoPlayer::setUrl(const QUrl &url)
     setWindowFilePath(url.isLocalFile() ? url.toLocalFile() : QString());
     int pos = url.toLocalFile().lastIndexOf(".");
     QString moviePath = url.toLocalFile().left(pos);
-    pos = url.toLocalFile().lastIndexOf("/");
-    QString directoryPath = url.toLocalFile().left(pos);
     pos = url.toLocalFile().lastIndexOf("-");
     int tpos = url.toLocalFile().lastIndexOf(".");
     QString lang = url.toLocalFile().mid(pos+1,tpos-pos-1);
@@ -211,21 +205,21 @@ SubLabel* VideoPlayer::createSubLabel(const QString& text, const QString& toolti
     return sub;
 }
 
-QLabel* VideoPlayer::findTraduction(const ReadSrt::subId& id, const QString& words)
+QLabel* VideoPlayer::findTranslation(const ReadSrt::subId& id, const QString& words)
 {
     QLabel *label { nullptr };
     static QString DEFAULT { "default" };
     if(_readDic->getDictionary().contains(words))
     {
-        QMap<QString,QString> allTraduction = _readDic->getDictionary()[words];
+        QMap<QString,QString> allTranslation = _readDic->getDictionary()[words];
 
-        if(allTraduction.contains(QString::number(id)))
+        if(allTranslation.contains(QString::number(id)))
         {
-            label = createSubLabel(words, allTraduction[QString::number(id)]);
+            label = createSubLabel(words, allTranslation[QString::number(id)]);
         }
-        else if (allTraduction.contains(DEFAULT))
+        else if (allTranslation.contains(DEFAULT))
         {
-            label = createSubLabel(words, allTraduction[DEFAULT]);
+            label = createSubLabel(words, allTranslation[DEFAULT]);
         }
         else
         {
@@ -234,10 +228,10 @@ QLabel* VideoPlayer::findTraduction(const ReadSrt::subId& id, const QString& wor
     }
     else if(_readWords->getDictionary().contains(words))
     {
-        QMap<QString,QString> allTraduction = _readWords->getDictionary()[words];
-        if(allTraduction.contains(DEFAULT))
+        QMap<QString,QString> allTranslation = _readWords->getDictionary()[words];
+        if(allTranslation.contains(DEFAULT))
         {
-            label = createSubLabel(words, allTraduction[DEFAULT]);
+            label = createSubLabel(words, allTranslation[DEFAULT]);
         }
     }
     return label;
@@ -276,7 +270,7 @@ void VideoPlayer::positionChanged(qint64 position)
         QVector<QLabel*> currentSub;
 
         // example : This is a subtitle
-        // lfs-iterX = in the X iteration looks for the traduction
+        // lfs-iterX = in the X iteration looks for the translation
         // lfs-iter1 : This is a subtitle / lfs-iter2 : This a / lfs-iter3 : This
         // lfs-iter4 : is a subtitle / lfs-iter5 : is a / lfs-iter6 : is
         // lfs-iter7 : a subtitle / lfs-iter8 : a
@@ -290,11 +284,11 @@ void VideoPlayer::positionChanged(qint64 position)
 
             sentence = sentence.trimmed().toLower();
 
-            QLabel * traduction = findTraduction(currentId, sentence);
+            QLabel * translation = findTranslation(currentId, sentence);
 
-            if(count - currentPosition == 1 || traduction)
+            if(count - currentPosition == 1 || translation)
             {
-                currentSub.append(traduction ? traduction : new QLabel(sentence));
+                currentSub.append(translation ? translation : new QLabel(sentence));
                 currentPosition = count;
                 count = subSplit.size() + 1;
             }

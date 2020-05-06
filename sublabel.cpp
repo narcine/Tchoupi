@@ -4,13 +4,8 @@
 #include <QHelpEvent>
 #include <QToolTip>
 
-SubLabel::SubLabel(QWidget* parent)
-    : QLabel(parent)
-{
-}
-
-SubLabel::SubLabel(const QString& word)
-    : QLabel(word)
+SubLabel::SubLabel(const QString& text)
+    : QLabel(text)
 {
 }
 
