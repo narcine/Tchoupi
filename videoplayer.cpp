@@ -139,16 +139,23 @@ void VideoPlayer::setUrl(const QUrl &url)
 {
     static QString translationPath = QProcessEnvironment::systemEnvironment()
             .value("TRANSLATION_PATH", ".");
+
     _errorLabel->setText(QString());
     setWindowFilePath(url.isLocalFile() ? url.toLocalFile() : QString());
-    int pos = url.toLocalFile().lastIndexOf(".");
-    QString moviePath = url.toLocalFile().left(pos);
+    QString localFile = url.toLocalFile();
+    int pos = localFile.lastIndexOf("/");
+    int tpos =  localFile.lastIndexOf(".");
+    QString moviePath = localFile.left(pos);
+    QString movieName = localFile.mid(pos+1, tpos-pos-1);
     pos = url.toLocalFile().lastIndexOf("-");
-    int tpos = url.toLocalFile().lastIndexOf(".");
+    tpos = url.toLocalFile().lastIndexOf(".");
     QString lang = url.toLocalFile().mid(pos+1,tpos-pos-1);
 
-    _readSrt = new ReadSrt(QString(moviePath + ".srt"));
-    _readDic = new ReadDic(QString(moviePath + ".dic"));
+    static QString videoTranslationPath = QProcessEnvironment::systemEnvironment()
+            .value("VIDEO_TRANSLATION_PATH", moviePath);
+
+    _readSrt = new ReadSrt(QString(moviePath + "/" + movieName + ".srt"));
+    _readDic = new ReadDic(QString(videoTranslationPath + "/" + movieName + ".dic"));
     _readWords = new ReadDic(QString(translationPath + "/aw_" + lang + ".dic"));
     _mediaPlayer->setMedia(url);
     _playButton->setEnabled(true);
