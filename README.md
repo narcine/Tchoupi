@@ -108,12 +108,12 @@ The environment variables :
 - **TRANSLATION_PATH** : it defines the location of the default dic files (created for all the videos)
 - **VIDEO_TRANSLATION_PATH** : it defines the location of the specific dic files (created for one video)
 
-should be defined. Otherwise the default dic files will be searched in the same directory as the application. And the specific dic files will be searched in the same directory as the video.
+...should be defined. Otherwise the default dic files will be searched in the same directory as the application. And the specific dic files will be searched in the same directory as the video.
 
 ```
 Ex :
-  TRANSLATION_PATH=../translation
-  VIDEO_TRANSLATION_PATH=../translation/video
+  export TRANSLATION_PATH=../translation
+  export VIDEO_TRANSLATION_PATH=../translation/video
 ```
 
 **!!! Srt files should always be put next to the video.**
