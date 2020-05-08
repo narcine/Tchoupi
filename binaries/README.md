@@ -1,4 +1,4 @@
-#Binaries folder
+# Binaries folder
 
 This folder holds the binaries that can be run without installed Qt.
 
