@@ -1,6 +1,5 @@
 # Tchoupi
-Tchoupi is a basic player with interactive subtitles. It will help you to learn a language. 
-A easy way to translate a word without opening any translator.
+Tchoupi is a basic player with interactive subtitles. It gives you an easy way to translate a word without opening any translator.
 
 ## Prerequisites
 If you want to build the source code you need to install Qt :
@@ -19,39 +18,41 @@ git clone https://github.com/narcine/Tchoupi.git
 Go inside the binaries folder
 
 ```bash
-./Tchoupi
+./Tchoupi.sh
 ```
 ## How to use it ?
 
-- Click on the open button to choose a video from your computer
+- Click on the open button to choose a video from your computer.
 - Press the play button.
 
 - Fly over a label, the text color will turn into blue and a tooltip containing the translation will display.
 The player will be also paused. If the text color does not turn into blue it means no translation has been provided.
 
- - Use the mouse, the play button or the space bar to play/pause.
+- Use the mouse, the play button or the space bar to play/pause.
  
 ![](images/translation_example_1.png)
 
-## How it works ?
+## How does it works ?
 
 ### Srt file
 
+Srt files are used to get the subtitles. You can find srt files on the internet or create one by yourself.
 The Tchoupi application uses only that format for the subtitles.
-Download on the internet and put it next to the video.
+- Download on the internet the srt file related to your video or create one
+- Put it in the same folder as the video
 
+Here is the srt syntax :
 ```
-The **SRT** files follow these rules :
-  [subId]
-  [start_position] --> [end_position]
-  [subtitle_1]
-  [subtitle_2]
+[subId]
+[start_position] --> [end_position]
+[subtitle_1]
+[subtitle_2]
 
-  [subId]
-  [start_position] --> [end_position]
-  [subtitle_1]
-       ---
-  [subtitle_N]
+[subId]
+[start_position] --> [end_position]
+[subtitle_1]
+    ---
+[subtitle_N]
 
 Ex:
   66
@@ -59,65 +60,92 @@ Ex:
   ( Sighs )
   ( Laughing )
   
-**subId** : The subtitle ID
-**start_position** : The starting time
-**end_position** : The ending time
+---
+
+subId : The subtitle ID
+start_position : The starting time
+end_position : The ending time
 ```
 ### Dic file
 
-Dic files can be found in the translation folder. They help to translate words.
+Dic files are used to translate words from one langague to another. It can be considered as a translation dictionary where only translated words are present.
 
-If you open one you will see a lot of words with a default translation.
+The default dic files are located at the translation folder's root directory. If you open one of them you will see a lot of words with a default translation.
 
-It's possible to create your own dic file. You can do that to override the default translation 
-or given a specific translation for a subtitle. Your dic file have to be located in the same place as the video.
+It is also possible to create your own dic file. You can do that to override the default translation or given a specific translation for a subtitle.
+
+Here is the dic syntax :
 
 ```
-The **DIC** files follow these rules :
-  [words] :
-  [subId], [translation_1]
-  [subId], [translation_2]
-  
-  [words] :
-  [subId], [translation_1]
-    ---
-  [subId], [translation_N]
+[words] :
+[subId], [translation_1]
+[subId], [translation_2]
+
+[words] :
+[subId], [translation_1]
+       ---
+[subId], [translation_N]
 
 Ex :
   snorts :
   default, renifle
   1, se renifle
-  
-**words** : Words or group of words encountered in the subtitles
-**subId** : The subtitle ID tag or the default tag.
-            When the subtitle ID tag is used, the translation will be only applied on the desired subtitle
+
+---
+
+words : Words or group of words encountered in the subtitles          
+subId : default :
+            The translation will apply on the entire video
+or
+        subtitle ID (1,2,3,etc.. See srt rules) :
+            The translation will apply on the desired subtitle. 
+            It overrides the default one.
 ```
 
-### Mandatory syntax & Location
+### Mandatory location & syntax
 
-The srt file, your dic file and the video file must have the same name and located in the same folder.
+#### Location
+
+The environment variables :
+- **TRANSLATION_PATH** : it defines the location of the default dic files (created for all the videos)
+- **VIDEO_TRANSLATION_PATH** : it defines the location of the specific dic files (created for one video)
+
+should be defined. Otherwise the default dic files will be searched in the same directory as the application. And the specific dic files will be searched in the same directory as the video.
 
 ```
-All the files have to end with :
-  -[LANG1][LANG2].* 
-
-It means : Translate from LANG1 to LANG2
-
-**LANG1** : The language code (ex : ENG,FR,ESP...) for the first language
-**LANG2** : The language code (ex : ENG,FR,ESP...) for the second language
-
 Ex :
-  dic-name-ENGFR.dic
+  TRANSLATION_PATH=../translation
+  VIDEO_TRANSLATION_PATH=../translation/video
+```
+
+**!!! Srt files should always be put next to the video.**
+
+#### Syntax 
+
+All the files must have the same name and end with :
+
+```
+-[LANG1][LANG2].* 
+
+```
+
+**excepted** default dic files which are named :
+
+```
+aw_[LANG1][LANG2].dic
+
+```
+
+[LANG1][LANG2] means : translate from *LANG1* to *LANG2*
+
+
+- **LANG1** : The language code (ex : ENG,FR,ESP...) for the first language
+- **LANG2** : The language code (ex : ENG,FR,ESP...) for the second language
+
+```
+Ex :
+  video-name-ENGFR.dic
   video-name-ENGFR.mkv
-```
-The dic files found in the translation folder only contain the default translations.
-```
-Set the environment variable TRANSLATION_PATH to the path where the default translations are located
-Ex :
-  export TRANSLATION_PATH=../translation
-```
-
-```
-The dic file has to be named :
-  aw_[LANG1][LANG2].dic
+  video-name-ENGFR.srt
+  aw_ENGFR.dic
 ```
