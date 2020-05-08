@@ -22,12 +22,12 @@ Go inside the binaries folder
 ```
 ## How to use it ?
 
+- Download on the internet the srt file related to your video or create one
+- Put it in the same folder as the video
 - Click on the open button to choose a video from your computer.
 - Press the play button.
-
 - Fly over a label, the text color will turn into blue and a tooltip containing the translation will display.
 The player will be also paused. If the text color does not turn into blue it means no translation has been provided.
-
 - Use the mouse, the play button or the space bar to play/pause.
  
 ![](images/translation_example_1.png)
@@ -38,8 +38,6 @@ The player will be also paused. If the text color does not turn into blue it mea
 
 Srt files are used to get the subtitles. You can find srt files on the internet or create one by yourself.
 The Tchoupi application uses only that format for the subtitles.
-- Download on the internet the srt file related to your video or create one
-- Put it in the same folder as the video
 
 Here is the srt syntax :
 ```
