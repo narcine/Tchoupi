@@ -9,10 +9,15 @@ SOURCES += \
     videoplayer.cpp \
     readdic.cpp \
     readsrt.cpp \
-    sublabel.cpp
+    sublabel.cpp \
+    videoplayergui.cpp
 
 HEADERS += \
     videoplayer.h \
     readdic.h \
     readsrt.h \
-    sublabel.h
+    sublabel.h \
+    videoplayergui.h
+
+FORMS += \
+    videoplayergui.ui

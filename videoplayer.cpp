@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include "videoplayer.h"
+#include "ui_videoplayergui.h"
 
 #include <QtWidgets>
 #include <QVideoWidget>
@@ -57,63 +58,6 @@
 VideoPlayer::VideoPlayer(QWidget *parent)
     : QWidget(parent)
 {
-    _mediaPlayer = new QMediaPlayer(this, QMediaPlayer::VideoSurface);
-    QVideoWidget *videoWidget = new QVideoWidget;
-
-    QAbstractButton *openButton = new QPushButton(tr("Open..."));
-    connect(openButton, &QAbstractButton::clicked, this, &VideoPlayer::openFile);
-
-    _playButton = new QPushButton;
-    _playButton->setEnabled(false);
-    _playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-
-    connect(_playButton, &QAbstractButton::clicked,
-            this, &VideoPlayer::play);
-
-    _positionSlider = new QSlider(Qt::Horizontal);
-    _positionSlider->setRange(0, 0);
-
-    connect(_positionSlider, &QAbstractSlider::sliderMoved,
-            this, &VideoPlayer::setPosition);
-
-    _errorLabel = new QLabel;
-    _errorLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
-
-    QBoxLayout *controlLayout = new QHBoxLayout;
-    controlLayout->setMargin(0);
-    controlLayout->addWidget(openButton);
-    controlLayout->addWidget(_playButton);
-    controlLayout->addWidget(_positionSlider);
-
-    auto qLabelSR = new QLabel;
-    auto qLabelSL = new QLabel;
-    _labelLayout = new QHBoxLayout;
-    _labelLayout->setSpacing(2);
-    _labelLayout->setMargin(0);
-
-    QBoxLayout *arraylabelLayout = new QHBoxLayout;
-    arraylabelLayout->addWidget(qLabelSR);
-    arraylabelLayout->setStretch(0,50);
-    arraylabelLayout->addLayout(_labelLayout);
-    arraylabelLayout->addWidget(qLabelSL);
-    arraylabelLayout->setStretch(2,50);
-
-    QBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(videoWidget);
-    layout->addLayout(arraylabelLayout);
-    layout->addLayout(controlLayout);
-    layout->addWidget(_errorLabel);
-
-    setLayout(layout);
-
-    _mediaPlayer->setVideoOutput(videoWidget);
-    _mediaPlayer->setNotifyInterval(100);
-    connect(_mediaPlayer, &QMediaPlayer::stateChanged,
-            this, &VideoPlayer::mediaStateChanged);
-    connect(_mediaPlayer, &QMediaPlayer::positionChanged, this, &VideoPlayer::positionChanged);
-    connect(_mediaPlayer, &QMediaPlayer::durationChanged, this, &VideoPlayer::durationChanged);
-    connect(_mediaPlayer, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
-            this, &VideoPlayer::handleError);
 }
 
 VideoPlayer::~VideoPlayer()
@@ -140,7 +84,7 @@ void VideoPlayer::setUrl(const QUrl &url)
     static QString translationPath = QProcessEnvironment::systemEnvironment()
             .value("TRANSLATION_PATH", ".");
 
-    _errorLabel->setText(QString());
+    emit eraseErrorLabel();
     setWindowFilePath(url.isLocalFile() ? url.toLocalFile() : QString());
     QString localFile = url.toLocalFile();
     int pos = localFile.lastIndexOf("/");
@@ -157,35 +101,9 @@ void VideoPlayer::setUrl(const QUrl &url)
     _readSrt = new ReadSrt(QString(moviePath + "/" + movieName + ".srt"));
     _readDic = new ReadDic(QString(videoTranslationPath + "/" + movieName + ".dic"));
     _readWords = new ReadDic(QString(translationPath + "/aw_" + lang + ".dic"));
-    _mediaPlayer->setMedia(url);
-    _playButton->setEnabled(true);
+    emit setMedia(url);
 }
 
-void VideoPlayer::play()
-{
-    switch (_mediaPlayer->state())
-    {
-        case QMediaPlayer::PlayingState:
-            _mediaPlayer->pause();
-            break;
-        default:
-            _mediaPlayer->play();
-            break;
-    }
-}
-
-void VideoPlayer::mediaStateChanged(QMediaPlayer::State state)
-{
-    switch(state)
-    {
-        case QMediaPlayer::PlayingState:
-            _playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-        break;
-        default:
-            _playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-        break;
-    }
-}
 
 ReadSrt::subId VideoPlayer::findSubId(const qint64& position)
 {
@@ -244,29 +162,17 @@ QLabel* VideoPlayer::findTranslation(const ReadSrt::subId& id, const QString& wo
     return label;
 }
 
-void VideoPlayer::clearLayout(QLayout *layout)
-{
-    QLayoutItem *child;
-    while ((child = layout->takeAt(0)) != nullptr)
-    {
-        child->widget()->hide();
-        QTimer::singleShot(1000, this, [child] (){
-            delete child->widget();
-        });
-    }
-}
+
 
 void VideoPlayer::positionChanged(qint64 position)
 {
     static ReadSrt::subId currentId =  -1;
     static ReadSrt::subId oldId =  -1;
 
-    _positionSlider->setValue(static_cast<int>(position));
-
     currentId = findSubId(position);
     if(currentId == -1)
     {
-        clearLayout(_labelLayout);
+        emit clearLabelLayout();
     }
     else if(oldId != currentId && currentId != -1)
     {
@@ -302,45 +208,18 @@ void VideoPlayer::positionChanged(qint64 position)
 
         }while(currentPosition < subSplit.size());
 
-        clearLayout(_labelLayout);
+        emit clearLabelLayout();
+        //clearLayout(_videoGui->getGui()->labelLayout);
 
         for(int i = 0; i < currentSub.size(); i++)
-            _labelLayout->addWidget(currentSub[i]);
+            emit addNewLabel(currentSub[i]);
     }
 }
 
 void VideoPlayer::enterSub()
 {
-    _mediaPlayer->pause();
+    emit pauseVideoPlayer();
 }
 
-bool VideoPlayer::event(QEvent *event)
-{
-    if(event->type() == QEvent::MouseButtonRelease)
-    {
-       play();
-    }
-    return QWidget::event(event);
-}
 
-void VideoPlayer::durationChanged(qint64 duration)
-{
-    _positionSlider->setRange(0, static_cast<int>(duration));
-}
 
-void VideoPlayer::setPosition(int position)
-{
-    _mediaPlayer->setPosition(position);
-}
-
-void VideoPlayer::handleError()
-{
-    _playButton->setEnabled(false);
-    const QString errorString = _mediaPlayer->errorString();
-    QString message = "Error: ";
-    if (errorString.isEmpty())
-        message += " #" + QString::number(int(_mediaPlayer->error()));
-    else
-        message += errorString;
-    _errorLabel->setText(message);
-}

@@ -56,6 +56,7 @@
 #include "readdic.h"
 #include "readsrt.h"
 #include "sublabel.h"
+#include "videoplayergui.h"
 
 QT_BEGIN_NAMESPACE
 class QAbstractButton;
@@ -74,28 +75,24 @@ class VideoPlayer : public QWidget
 public:
     VideoPlayer(QWidget *parent = nullptr);
     ~VideoPlayer() override;
+    void openFile();
+    void positionChanged(qint64 position);
 
 private slots:
-    void mediaStateChanged(QMediaPlayer::State state);
-    void positionChanged(qint64 position);
-    void durationChanged(qint64 duration);
-    void setPosition(int position);
-    void handleError();
-    void openFile();
-    void play();
     void enterSub();
 
+signals:
+    void eraseErrorLabel();
+    void pauseVideoPlayer();
+    void addNewLabel(QLabel*);
+    void clearLabelLayout();
+    void setPositionValue(qint64);
+    void setMedia(const QUrl&);
+
 private:
-    QMediaPlayer* _mediaPlayer;
-    QAbstractButton* _playButton;
-    QSlider* _positionSlider;
-    QLabel* _errorLabel;
-    QBoxLayout* _labelLayout;
     ReadDic* _readDic;
     ReadSrt* _readSrt;
     ReadDic* _readWords;
-
-    bool event(QEvent* event) override;
 
     /**
      * @brief Find the appropriated translation
@@ -133,4 +130,4 @@ private:
     SubLabel* createSubLabel(const QString& text, const QString& tooltip = "");
 };
 
-#endif
+#endif // VIDEOPLAYER_H
