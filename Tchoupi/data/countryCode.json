@@ -1,0 +1,10 @@
+{
+    "Français" : {
+        "code" : "FRE",
+        "image" : "french.png"
+    },
+    "English" : {
+        "code" : "ENG",
+        "image" : "english.png"
+    }
+}
