@@ -38,35 +38,42 @@
      <widget class="QVideoWidget" name="videoWidget" native="true"/>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="50,0,50">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <spacer name="spacer1">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string/>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="margin">
+         <number>0</number>
         </property>
-       </spacer>
+       </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="labelLayout"/>
+       <layout class="QHBoxLayout" name="labelLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+       </layout>
       </item>
       <item>
-       <spacer name="spacer2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string/>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="margin">
+         <number>0</number>
         </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </item>

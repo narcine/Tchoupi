@@ -156,13 +156,6 @@ QWebEngineView *WebView::createWindow(QWebEnginePage::WebWindowType type)
         return nullptr;
 
     switch (type) {
-   /* case QWebEnginePage::WebBrowserTab: {
-        //return mainWindow->tabWidget()->createTab();
-        return nullptr;
-    }
-    case QWebEnginePage::WebBrowserBackgroundTab: {
-        return mainWindow->tabWidget()->createBackgroundTab();
-    }*/
     case QWebEnginePage::WebBrowserWindow: {
         return mainWindow->browser()->createWindow()->currentTab();
     }

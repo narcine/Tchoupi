@@ -105,12 +105,13 @@ private:
     QSharedPointer<ReadDic> _readDic;
     QSharedPointer<ReadSrt> _readSrt;
     QSharedPointer<ReadDic> _readWords;
-    QSharedPointer<BrowserWindow> _window;
-    QSharedPointer<Browser> _browser;
+    BrowserWindow* _window;
+    Browser* _browser;
     QFileInfo _mediaInfo;
     QString _lang1;
     QString _lang2;
     QJsonObject _countryCode;
+    QJsonObject _errors;
 
     bool checkLangs(const QString& check, QString& country1, QString& country2);
 

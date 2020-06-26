@@ -63,13 +63,16 @@
 
 
 VideoPlayer::VideoPlayer(QWidget *parent)
-    : QWidget(parent), _browser(nullptr)
+    : QWidget(parent), _browser(nullptr), _window(nullptr)
 {
-    QFile file(":countryCode.json");
-    file.open(QFile::ReadOnly | QFile::Text);
-    QByteArray b = file.readAll();
-    _countryCode = QJsonDocument::fromJson(b).object();
-    file.close();
+    QFile countryCodeFile(":countryCode.json");
+    QFile errorFile(":errors.json");
+    countryCodeFile.open(QFile::ReadOnly | QFile::Text);
+    errorFile.open(QFile::ReadOnly | QFile::Text);
+    _countryCode = QJsonDocument::fromJson(countryCodeFile.readAll()).object();
+    _errors = QJsonDocument::fromJson(errorFile.readAll()).object();
+    countryCodeFile.close();
+    errorFile.close();
 }
 
 VideoPlayer::~VideoPlayer()
@@ -137,7 +140,9 @@ bool VideoPlayer::checkLangs(const QString& check, QString& country1, QString& c
             country2 = country;
         }
     }
-    return  !country1.isEmpty() && !country2.isEmpty();
+    if(country1.isEmpty() || country2.isEmpty()) setErrorLabel(_errors["ERR_UNKNOWN_LANG"].toString());
+    if(country1 == country2) setErrorLabel(_errors["ERR_LANG_DB"].toString());
+    return  !country1.isEmpty() && !country2.isEmpty() && country1 != country2;
 }
 
 void VideoPlayer::srtChanged(const QString& srtPath)
@@ -278,12 +283,14 @@ void VideoPlayer::openWebSite()
         try
         {
             emit pauseVideoPlayer();
-            _browser = QSharedPointer<Browser>(new Browser(_mediaInfo));
-            _window = QSharedPointer<BrowserWindow>(_browser->createWindow());
+            _browser = new Browser(_mediaInfo);
+            _window = _browser->createWindow();
 
             QString mediaName = _mediaInfo.fileName().replace("."+_mediaInfo.suffix(),"");
-            _window->tabWidget()->setUrl(QUrl("https://www.opensubtitles.org/en/search2/sublanguageid-" + _lang1 + "/moviename-" + mediaName));
-            connect(_browser->downloadManagerWidget(), SIGNAL(newDownloadWidget(DownloadWidget*)), this, SLOT(newDownloadWidget(DownloadWidget*)));
+            _window->setUrl(QUrl("https://www.opensubtitles.org/en/search2/sublanguageid-"
+                + _lang1 + "/moviename-" + mediaName.replace("-"+_lang1 + _lang2,"")));
+            connect(_browser->downloadManagerWidget(), SIGNAL(newDownloadWidget(DownloadWidget*)),
+                this, SLOT(newDownloadWidget(DownloadWidget*)));
         }catch(MediaNotFoundException& ex)
         {
            setErrorLabel(ex.getMessage());

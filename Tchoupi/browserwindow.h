@@ -71,36 +71,24 @@ class BrowserWindow : public QMainWindow
 public:
     BrowserWindow(Browser *browser, QWebEngineProfile *profile, bool forDevTools = false);
     QSize sizeHint() const override;
-    TabWidget *tabWidget() const;
+    void setUrl(QUrl url) const;
     WebView *currentTab() const;
     Browser *browser() { return m_browser; }
-    void setDestroyed(bool d) { _destroyed = d; }
-    bool isDestroyed() {return _destroyed; }
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void handleNewWindowTriggered();
-    void handleNewIncognitoWindowTriggered();
-    void handleFileOpenTriggered();
-    void handleFindActionTriggered();
-    void handleShowWindowTriggered();
     void handleWebViewLoadProgress(int);
     void handleWebViewTitleChanged(const QString &title);
     void handleWebActionEnabledChanged(QWebEnginePage::WebAction action, bool enabled);
     void handleDevToolsRequested(QWebEnginePage *source);
 
 private:
-    QMenu *createFileMenu(TabWidget *tabWidget);
-    QMenu *createEditMenu();
     QMenu *createViewMenu(QToolBar *toolBar);
-    QMenu *createWindowMenu(TabWidget *tabWidget);
-    QMenu *createHelpMenu();
     QToolBar *createToolBar();
 
 private:
-    bool _destroyed {false};
     Browser *m_browser;
     QWebEngineProfile *m_profile;
     TabWidget *m_tabWidget;
@@ -112,7 +100,6 @@ private:
     QAction *m_stopReloadAction;
     QLineEdit *m_urlLineEdit;
     QAction *m_favAction;
-    QString m_lastSearch;
 };
 
 #endif // BROWSERWINDOW_H

@@ -43,7 +43,8 @@ FORMS += \
     downloadwidget.ui
 
 RESOURCES += data/simplebrowser.qrc \
-    data/languages.qrc
+    data/languages.qrc \
+    data/utility.qrc
 
 !win32: LIBS += -lz
 

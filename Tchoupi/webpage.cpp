@@ -132,7 +132,12 @@ void WebPage::handleAuthenticationRequired(const QUrl &requestUrl, QAuthenticato
 
 bool WebPage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType, bool)
 {
-    if(url.url().contains("www.opensubtitles.org") || url.url().contains("dl.opensubtitles.org"))
+    qDebug() << url.url();
+    if(url.url().contains("www.opensubtitles.org/en/search") ||
+        url.url().contains("www.opensubtitles.org/en/subtitles") ||
+        url.url().contains("www.opensubtitles.org/en/ssearch") ||
+        url.url().contains("www.opensubtitles.org/download") ||
+        url.url().contains("dl.opensubtitles.org"))
     {
         return true;
     }
