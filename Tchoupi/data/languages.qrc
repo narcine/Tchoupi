@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>countryCode.json</file>
+        <file>english.png</file>
+        <file>french.png</file>
+    </qresource>
+</RCC>
