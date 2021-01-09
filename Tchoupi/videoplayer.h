@@ -113,16 +113,29 @@ private:
     QJsonObject _countryCode;
     QJsonObject _errors;
 
-    bool checkLangs(const QString& check, QString& country1, QString& country2);
+    /**
+     * @brief checkLangs Check if the sentence contains both country codes
+     * @param sentence The sentence to check
+     * @param country1 The first country code corresponding to the first language
+     * @param country2 The second country code corresponding to the second language
+     * @return true if found, otherwise false.
+     */
+    bool checkLangs(const QString& sentence, QString& country1, QString& country2);
 
 
     /**
+     * @brief updateSubtitle Update the subtitle depending on the position of the content
+     * @param position The position of the content
+     */
+    void updateSubtitle(qint64 position);
+
+    /**
      * @brief Find the appropriated translation
-     * @param id The subtitle number to retreive the translation
      * @param sentence The sentence to check
+     * @param id Use the ID to look for a translation related to the sentence
      * @return The desired translation
      */
-    QLabel* findTranslation(const ReadSrt::subId& id, const QString& sentence);
+    QLabel* findTranslation(const QString& sentence, const ReadSrt::subId& id = -1);
 
     /**
      * @brief Clear the layout

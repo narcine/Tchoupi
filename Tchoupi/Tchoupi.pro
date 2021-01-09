@@ -6,6 +6,7 @@ CONFIG += c++14
 
 SOURCES += \
     main.cpp \
+    slider.cpp \
     videoplayer.cpp \
     readdic.cpp \
     readsrt.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     webview.cpp
 
 HEADERS += \
+    slider.h \
     videoplayer.h \
     readdic.h \
     readsrt.h \

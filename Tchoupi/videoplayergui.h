@@ -30,7 +30,6 @@ private:
     std::function<void(qint64)> _positionCallback;
     std::function<void()> _openWebSiteCallback;
 
-    bool event(QEvent *event) override;
     void closeEvent(QCloseEvent *) override;
 
 private slots:
@@ -38,8 +37,8 @@ private slots:
     void mediaStateChanged(QMediaPlayer::State state);
     void durationChanged(qint64 duration);
     void handleError();
-    void setPosition(int position);
     void openFile();
+    void setPosition(qint64 position);
     void positionChanged(qint64 position);
     void setErrorLabel(const QString&);
     void setMedia(const QUrl& url);

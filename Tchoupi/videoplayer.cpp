@@ -122,7 +122,7 @@ void VideoPlayer::setUrl(const QUrl &url)
     }
 }
 
-bool VideoPlayer::checkLangs(const QString& check, QString& country1, QString& country2)
+bool VideoPlayer::checkLangs(const QString& sentence, QString& country1, QString& country2)
 {
     country1.clear();
     country2.clear();
@@ -130,7 +130,7 @@ bool VideoPlayer::checkLangs(const QString& check, QString& country1, QString& c
     for(QString country : listCountry)
     {
        QJsonObject object =  _countryCode[country].toObject();
-       int index = check.indexOf(object["code"].toString());
+       int index = sentence.indexOf(object["code"].toString());
         if(index  == 0)
         {
             country1 = country;
@@ -152,9 +152,11 @@ void VideoPlayer::srtChanged(const QString& srtPath)
 
 ReadSrt::subId VideoPlayer::findSubId(const qint64& position)
 {
+    ReadSrt::subId id = -1;
+    if(_readSrt == nullptr)return id;
     QMap<qint64, qint64> subDuration(_readSrt->getSubDuration());
     QMapIterator<ReadSrt::subId, qint64> subPositionI(_readSrt->getSubPosition());
-    ReadSrt::subId id = -1;
+
     while(subPositionI.hasNext())
     {
         subPositionI.next();
@@ -175,39 +177,39 @@ SubLabel* VideoPlayer::createSubLabel(const QString& text, const QString& toolti
     return sub;
 }
 
-QLabel* VideoPlayer::findTranslation(const ReadSrt::subId& id, const QString& words)
+QLabel* VideoPlayer::findTranslation(const QString& sentence, const ReadSrt::subId& id)
 {
     QLabel *label { nullptr };
     static QString DEFAULT { "default" };
-    if(_readDic->getDictionary().contains(words))
+    if(_readDic->getDictionary().contains(sentence))
     {
-        QMap<QString,QString> allTranslation = _readDic->getDictionary()[words];
+        QMap<QString,QString> allTranslation = _readDic->getDictionary()[sentence];
 
         if(allTranslation.contains(QString::number(id)))
         {
-            label = createSubLabel(words, allTranslation[QString::number(id)]);
+            label = createSubLabel(sentence, allTranslation[QString::number(id)]);
         }
         else if (allTranslation.contains(DEFAULT))
         {
-            label = createSubLabel(words, allTranslation[DEFAULT]);
+            label = createSubLabel(sentence, allTranslation[DEFAULT]);
         }
         else
         {
-            label = new QLabel(words);
+            label = new QLabel(sentence);
         }
     }
-    else if(_readWords->getDictionary().contains(words))
+    else if(_readWords->getDictionary().contains(sentence))
     {
-        QMap<QString,QString> allTranslation = _readWords->getDictionary()[words];
+        QMap<QString,QString> allTranslation = _readWords->getDictionary()[sentence];
         if(allTranslation.contains(DEFAULT))
         {
-            label = createSubLabel(words, allTranslation[DEFAULT]);
+            label = createSubLabel(sentence, allTranslation[DEFAULT]);
         }
     }
     return label;
 }
 
-void VideoPlayer::positionChanged(qint64 position)
+void VideoPlayer::updateSubtitle(qint64 position)
 {
     static ReadSrt::subId currentId =  -1;
     static ReadSrt::subId oldId =  -1;
@@ -227,10 +229,10 @@ void VideoPlayer::positionChanged(qint64 position)
 
         // example : This is a subtitle
         // lfs-iterX = in the X iteration looks for the translation
-        // lfs-iter1 : This is a subtitle / lfs-iter2 : This a / lfs-iter3 : This
-        // lfs-iter4 : is a subtitle / lfs-iter5 : is a / lfs-iter6 : is
-        // lfs-iter7 : a subtitle / lfs-iter8 : a
-        // lfs-iter9 : subtitle
+        // lfs-iter1 : This is a subtitle / lfs-iter2 : This is a / lfs-iter3 : This is
+        // lfs-iter4 : This / lfs-iter5 : is a subtitle / lfs-iter6 : is a / lfs-iter7 : is
+        // lfs-iter8 : a subtitle / lfs-iter9 : a
+        // lfs-iter10 : subtitle
         do
         {
             count --;
@@ -240,7 +242,7 @@ void VideoPlayer::positionChanged(qint64 position)
 
             sentence = sentence.trimmed().toLower();
 
-            QLabel * translation = findTranslation(currentId, sentence);
+            QLabel * translation = findTranslation(sentence, currentId);
 
             if(count - currentPosition == 1 || translation)
             {
@@ -256,6 +258,11 @@ void VideoPlayer::positionChanged(qint64 position)
         for(int i = 0; i < currentSub.size(); i++)
             emit addNewLabel(currentSub[i]);
     }
+}
+
+void VideoPlayer::positionChanged(qint64 position)
+{
+    updateSubtitle(position);
 }
 
 void VideoPlayer::closed()

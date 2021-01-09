@@ -97,9 +97,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QSlider" name="slider">
+       <widget class="Slider" name="slider">
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </item>

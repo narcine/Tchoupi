@@ -24,10 +24,9 @@ VideoPlayerGui::VideoPlayerGui(QWidget *parent) :
     setLayout(_ui->mainLayout);
     this->resize(availableGeometry.width() * 3 / 5, availableGeometry.height()* 3/ 4);
 
+    connect(_ui->slider, &Slider::positionChanged, this, &VideoPlayerGui::setPosition);
     connect(_ui->playButton, &QAbstractButton::clicked, this,
             &VideoPlayerGui::play);
-    connect(_ui->slider, &QAbstractSlider::sliderMoved, this,
-            &VideoPlayerGui::setPosition);
     connect(_mediaPlayer, &QMediaPlayer::stateChanged, this,
             &VideoPlayerGui::mediaStateChanged);
     connect(_mediaPlayer, &QMediaPlayer::durationChanged, this,
@@ -42,6 +41,11 @@ VideoPlayerGui::VideoPlayerGui(QWidget *parent) :
             &VideoPlayerGui::openWebSite);
 }
 
+void VideoPlayerGui::setPosition(qint64 position)
+{
+    _mediaPlayer->setPosition(position);
+}
+
 void VideoPlayerGui::closeEvent(QCloseEvent* /* event */)
 {
     emit closed();
@@ -50,15 +54,6 @@ void VideoPlayerGui::closeEvent(QCloseEvent* /* event */)
 VideoPlayerGui::~VideoPlayerGui()
 {
     delete _ui;
-}
-
-bool VideoPlayerGui::event(QEvent *event)
-{
-    if(event->type() == QEvent::MouseButtonRelease)
-    {
-       play();
-    }
-    return QWidget::event(event);
 }
 
 void VideoPlayerGui::play()
@@ -89,12 +84,7 @@ void VideoPlayerGui::mediaStateChanged(QMediaPlayer::State state)
 
 void VideoPlayerGui::durationChanged(qint64 duration)
 {
-    _ui->slider->setRange(0, static_cast<int>(duration));
-}
-
-void VideoPlayerGui::setPosition(int position)
-{
-    _mediaPlayer->setPosition(position);
+   _ui->slider->setRange(0, static_cast<int>(duration));
 }
 
 void VideoPlayerGui::setIcon(const QString& icon1, const QString& icon2)

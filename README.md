@@ -1,5 +1,5 @@
 # Tchoupi
-Tchoupi is a basic player with interactive subtitles. It gives you an easy way to translate a word without opening any translator.
+Tchoupi is a basic player with interactive subtitles. It gives you an easy way to translate a word without opening any translators.
 
 ## Prerequisites
 If you want to build the source code you need to install Qt :
@@ -12,32 +12,33 @@ minimum QtCreator 4.8.1
 ## Installation
 
 ```bash
-git clone https://github.com/narcine/Tchoupi.git
+git clone --recurse-submodules https://github.com/narcine/Tchoupi.git
 ```
 ## Run the player
 Go inside the binaries folder
 
 ```bash
+cd Tchoupi/binaries
 ./Tchoupi.sh
 ```
 ## How to use it ?
 
-- Download on the internet the srt file related to your video or create one
+- Download on the internet the srt file related to your video or use the srt submenu
 - Put it in the same folder as the video
 - Click on the open button to choose a video from your computer.
 - Press the play button.
-- Fly over a label, the text color will turn into blue and a tooltip containing the translation will display.
+- Fly over a label, the text color will turn into blue and a tooltip containing the translation will be displayed.
 The player will be also paused. If the text color does not turn into blue it means no translation has been provided.
-- Use the mouse, the play button or the space bar to play/pause.
+- Use the play button or the space bar to play/pause.
  
-![](images/translation_example_1.png)
+![](Tchoupi/images/translation_example_1.png)
 
 ## How does it works ?
 
 ### Srt file
 
-Srt files are used to get the subtitles. You can find srt files on the internet or create one by yourself.
-The Tchoupi application uses only that format for the subtitles.
+Srt files are used to get the subtitles. You can find srt files on the internet or use the srt submenu provided by the application.
+The Tchoupi application uses only the srt format for the subtitles.
 
 Here is the srt syntax :
 ```
@@ -66,9 +67,9 @@ end_position : The ending time
 ```
 ### Dic file
 
-Dic files are used to translate words from one langague to another. It can be considered as a translation dictionary where only translated words are present.
+Dic files are used to translate words from one language to another. It can be considered as a translation dictionary where only translated words are present.
 
-The default dic files are located at the translation folder's root directory. If you open one of them you will see a lot of words with a default translation.
+The default dic files are located at the root directory of the translation folder. If you open one of them, you will see a lot of words with a default translation.
 
 It is also possible to create your own dic file. You can do that to override the default translation or given a specific translation for a subtitle.
 
@@ -93,10 +94,10 @@ Ex :
 
 words : Words or group of words encountered in the subtitles          
 subId : default :
-            The translation will apply on the entire video
+            The translation will be applied on the entire video
 or
         subtitle ID (1,2,3,etc.. See srt rules) :
-            The translation will apply on the desired subtitle. 
+            The translation will be applied on the desired subtitle. 
             It overrides the default one.
 ```
 
@@ -104,23 +105,24 @@ or
 
 #### Location
 
-The environment variables :
-- **TRANSLATION_PATH** : it defines the location of the default dic files (created for all the videos)
+The environment variables...
+- **TRANSLATION_PATH** : it defines the location of the default dic files (created for all videos)
 - **VIDEO_TRANSLATION_PATH** : it defines the location of the specific dic files (created for one video)
 
-...should be defined. Otherwise the default dic files will be searched in the same directory as the application. And the specific dic files will be searched in the same directory as the video.
+...should be defined. Otherwise default dic files will be searched in the same directory as the application. And specific dic files will be searched in the same directory as the video.
 
 ```
 Ex :
   export TRANSLATION_PATH=../translation
   export VIDEO_TRANSLATION_PATH=../translation/video
+  (See Tchoupi.sh)
 ```
 
 **!!! Srt files should always be put next to the video.**
 
 #### Syntax 
 
-All the files must have the same name and end with :
+All files must have the same name and end with :
 
 ```
 -[LANG1][LANG2].* 
