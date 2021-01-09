@@ -31,7 +31,7 @@ cd Tchoupi/binaries
 The player will be also paused. If the text color does not turn into blue it means no translation has been provided.
 - Use the play button or the space bar to play/pause.
  
-![](Tchoupi/images/translation_example_1.png)
+![](Tchoupi/data/images/translation_example_1.png)
 
 ## How does it works ?
 
