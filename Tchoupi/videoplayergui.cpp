@@ -47,6 +47,11 @@ void VideoPlayerGui::setPosition(qint64 position)
     _mediaPlayer->setPosition(position);
 }
 
+void VideoPlayerGui::keyPressEvent(QKeyEvent* /* event */)
+{
+    play();
+}
+
 void VideoPlayerGui::closeEvent(QCloseEvent* /* event */)
 {
     emit closed();

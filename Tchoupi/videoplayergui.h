@@ -31,6 +31,7 @@ private:
     std::function<void(qint64)> _positionCallback;
     std::function<void()> _openWebSiteCallback;
 
+    void keyPressEvent(QKeyEvent *) override;
     void closeEvent(QCloseEvent *) override;
 
 private slots:
