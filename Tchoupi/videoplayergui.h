@@ -26,6 +26,7 @@ public:
 private:
     Ui::VideoPlayerGui* _ui;
     QMediaPlayer* _mediaPlayer;
+    QString _totalDuration;
     std::function<void()> _openFileCallback;
     std::function<void(qint64)> _positionCallback;
     std::function<void()> _openWebSiteCallback;

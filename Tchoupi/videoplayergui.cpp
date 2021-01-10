@@ -86,6 +86,11 @@ void VideoPlayerGui::mediaStateChanged(QMediaPlayer::State state)
 void VideoPlayerGui::durationChanged(qint64 duration)
 {
    _ui->slider->setRange(0, static_cast<int>(duration));
+   qint64 hour = duration/(3600*1000);
+   qint64 min = (duration%(3600*1000))/(60*1000);
+   qint64 sec =(duration%(3600*1000))%(60*1000)/1000;
+   _totalDuration = QString("%1:%2:%3").arg(hour, 2, 10, QChar('0')).arg(min, 2, 10, QChar('0'))
+        .arg(sec, 2, 10, QChar('0'));
 }
 
 void VideoPlayerGui::setIcon(const QString& icon1, const QString& icon2)
@@ -145,6 +150,12 @@ void VideoPlayerGui::setOpenWebSiteCallback(std::function<void()> f)
 void VideoPlayerGui::positionChanged(qint64 position)
 {
     _ui->slider->setValue(static_cast<int>(position));
+    qint64 hour = position/(3600*1000);
+    qint64 min = (position%(3600*1000))/(60*1000);
+    qint64 sec =(position%(3600*1000))%(60*1000)/1000;
+    QString currDuration = QString("%1:%2:%3").arg(hour, 2, 10, QChar('0'))
+        .arg(min, 2, 10, QChar('0')).arg(sec, 2, 10, QChar('0'));
+    _ui->duration->setText(currDuration + "/" + _totalDuration);
     _positionCallback(position);
 }
 
