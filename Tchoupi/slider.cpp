@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-Slider::Slider(QWidget *widget) : QSlider(widget)
+Slider::Slider(QWidget *widget) : QSlider(Qt::Orientation::Horizontal, widget)
 {
 }
 

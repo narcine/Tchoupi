@@ -19,6 +19,7 @@ VideoPlayerGui::VideoPlayerGui(QWidget *parent) :
     _ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     _ui->slider->setMinimum(0);
     _ui->slider->setRange(0,0);
+
     const QScreen *screen = QGuiApplication::screens()[0];
     const QRect availableGeometry = screen->availableGeometry();
     setLayout(_ui->mainLayout);
