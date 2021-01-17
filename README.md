@@ -12,7 +12,7 @@ minimum QtCreator 4.8.1
 ## Installation
 
 ```bash
-git clone --recurse-submodules https://github.com/narcine/Tchoupi.git
+git clone https://github.com/narcine/Tchoupi.git
 ```
 ## Run the player
 Go inside the binaries folder
@@ -23,7 +23,7 @@ cd Tchoupi/binaries
 ```
 ## How to use it ?
 
-- Download on the internet the srt file related to your video or use the srt submenu
+- Download on the internet the srt file related to your video
 - Put it in the same folder as the video
 - Click on the open button to choose a video from your computer.
 - Press the play button.
@@ -37,7 +37,7 @@ The player will be also paused. If the text color does not turn into blue it mea
 
 ### Srt file
 
-Srt files are used to get the subtitles. You can find srt files on the internet or use the srt submenu provided by the application.
+Srt files are used to get the subtitles. You can find srt files on the internet.
 The Tchoupi application uses only the srt format for the subtitles.
 
 Here is the srt syntax :

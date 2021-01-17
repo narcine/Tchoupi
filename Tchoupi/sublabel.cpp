@@ -19,6 +19,7 @@ bool SubLabel::event(QEvent *event)
         break;
         case QEvent::Leave :
             this->setStyleSheet("QLabel { color : black }");
+            emit leave();
         break;
         case QEvent::ToolTip :
         {

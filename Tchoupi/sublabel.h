@@ -18,11 +18,12 @@ class SubLabel : public QLabel
 public:
     SubLabel(const QString& text); /**< The text to display on the screen */
 
-signals :
-    void enter(); /**< The signal is emitted when the event Qevent::Enter is received */
+private:
+    bool event(QEvent *event) override; /**< Color the label when the mouse moves over */
 
-protected:
-    bool event(QEvent *event) override;
+signals:
+    void enter(); /**< When the mouse moves over the label */
+    void leave(); /**< When the mouse leaves the label */
 };
 
 #endif // LABELLAYOUT_H

@@ -17,7 +17,7 @@ public:
 
     /**
      * @brief Get the translations dictionary
-     * @return the actual translations dictionary
+     * @return the current translations dictionary
      */
     const QMap<QString, QMap<QString, QString>>& getDictionary();
 

@@ -55,34 +55,13 @@ void ReadSrt::purgeLine(QString& line)
 {
     //remove special characters and trailing spaces
     line.replace(QRegExp("<[^<>]+>"),"");
-    line.replace("?"," ? ");
-    line.replace("_"," _ ");
-    line.replace("\""," \" ");
-    line.replace(","," , ");
-    line.replace("#"," # ");
-    line.replace("."," . ");
-    line.replace("^"," ^ ");
-    line.replace("*"," * ");
-    line.replace("~"," ~ ");
-    line.replace("&"," & ");
-    line.replace("|"," | ");
-    line.replace("\\"," \\ ");
-    line.replace("/"," / ");
-    line.replace("!"," ! ");
-    line.replace("@"," @ ");
-    line.replace("#"," # ");
-    line.replace("="," = ");
-    line.replace("+"," + ");
-    line.replace("$"," $ ");
-    line.replace("-"," - ");
-    line.replace(":"," : ");
-    line.replace("["," [ ");
-    line.replace("]"," ] ");
-    line.replace("("," ( ");
-    line.replace(")"," ) ");
-    line.replace("{"," { ");
-    line.replace("}"," } ");
-    line.replace("\\s{2,}"," ");
+    QStringList characters = { "?", "_", "\"", ",", "#", ".", "^", "*", "~", "&", "|", "\\", "/",
+        "!", "@", "=", "+", "$", "-", ":", "'", "[", "]", "(", ")", "{", "}"};
+    for(QString c : characters)
+    {
+        line.replace(c, " " + c + " ");
+    }
+    line.replace(QRegExp("\\s{2,}")," ");
     line = line.trimmed();
 }
 

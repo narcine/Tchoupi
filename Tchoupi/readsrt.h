@@ -69,7 +69,7 @@ private :
     /**
      * @brief convertStringToDuration
      * @param duration The subtitle duration
-     * @return the conversion result
+     * @return the result of the conversion
      */
     qint64 convertStringToDuration(const QString& duration);
 
