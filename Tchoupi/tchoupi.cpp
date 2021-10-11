@@ -194,10 +194,11 @@ ReadSrt::subId Tchoupi::findSubId(ReadSrt* const readSrt, const qint64& position
 
 SubLabel* Tchoupi::createSubLabel(const QString& text, const QString& tooltip)
 {
+    static bool notPaused = false;
     SubLabel* sub = new SubLabel(text);
     sub->setToolTip(tooltip);
-    connect(sub, &SubLabel::enter, this, [&](){ _mediaPlayer->pause(); });
-    connect(sub, &SubLabel::leave, this, [&](){ _mediaPlayer->play(); });
+    connect(sub, &SubLabel::enter, this, [&](){ if(_mediaPlayer->state() == QMediaPlayer::PausedState) notPaused = true; else _mediaPlayer->pause(); });
+    connect(sub, &SubLabel::leave, this, [&](){ if(!notPaused)_mediaPlayer->play(); notPaused = false; });
     return sub;
 }
 
